@@ -1,173 +1,68 @@
 import streamlit as st
 import random
 
-st.set_page_config(
-    page_title="Challenge Quiz Game",
-    page_icon="🍜",
-    layout="centered"
-)
+st.title("🌏 เกมทายอาหารประจำชาติ")
+st.write("ทายว่าอาหารแต่ละอย่างเป็นอาหารประจำชาติของประเทศใด")
 
-# -------------------------
-# ข้อมูลคำถาม
-# -------------------------
-questions = [
-    {
-        "country": "ประเทศไทย",
-        "food": "ต้มยำกุ้ง",
-        "options": ["อินโดนีเซีย", "ประเทศไทย", "มาเลเซีย", "เวียดนาม"]
-    },
-    {
-        "country": "ญี่ปุ่น",
-        "food": "ซูชิ",
-        "options": ["จีน", "เกาหลีใต้", "ญี่ปุ่น", "ไทย"]
-    },
-    {
-        "country": "ฝรั่งเศส",
-        "food": "ครัวซองต์",
-        "options": ["ฝรั่งเศส", "อิตาลี", "สเปน", "เยอรมนี"]
-    },
-    {
-        "country": "อิตาลี",
-        "food": "พิซซ่า",
-        "options": ["ฝรั่งเศส", "อิตาลี", "จีน", "เม็กซิโก"]
-    },
-    {
-        "country": "เกาหลีใต้",
-        "food": "กิมจิ",
-        "options": ["ญี่ปุ่น", "จีน", "เกาหลีใต้", "เวียดนาม"]
-    },
-    {
-        "country": "จีน",
-        "food": "เป็ดปักกิ่ง",
-        "options": ["จีน", "ไทย", "อินเดีย", "ญี่ปุ่น"]
-    },
-    {
-        "country": "อินเดีย",
-        "food": "แกงกะหรี่",
-        "options": ["อินเดีย", "จีน", "ฝรั่งเศส", "สเปน"]
-    },
-    {
-        "country": "สเปน",
-        "food": "ปาเอยา",
-        "options": ["อิตาลี", "สเปน", "ฝรั่งเศส", "โปรตุเกส"]
-    },
-    {
-        "country": "เม็กซิโก",
-        "food": "ทาโก้",
-        "options": ["เม็กซิโก", "บราซิล", "สเปน", "อิตาลี"]
-    },
-    {
-        "country": "เวียดนาม",
-        "food": "เฝอ",
-        "options": ["ไทย", "จีน", "เวียดนาม", "เกาหลีใต้"]
-    }
+# ข้อมูลจากตาราง
+data = [
+    {"อาหาร": "ต้มยำกุ้ง", "คำใบ้": "สยามเมืองยิ้ม", "ประเทศ": "ประเทศไทย"},
+    {"อาหาร": "ซูชิ", "คำใบ้": "แดนอาทิตย์อุทัย", "ประเทศ": "ประเทศญี่ปุ่น"},
+    {"อาหาร": "พาสต้า", "คำใบ้": "ที่ตั้งกรุงโรม", "ประเทศ": "ประเทศอิตาลี"},
+    {"อาหาร": "กิมจิ", "คำใบ้": "ต้นกำเนิดเพลงแนว K-POP", "ประเทศ": "ประเทศเกาหลีใต้"},
+    {"อาหาร": "ทาโก้", "คำใบ้": "ต้นกำเนิดของเหล้าเตกีล่า", "ประเทศ": "ประเทศเม็กซิโก"},
+    {"อาหาร": "ครัวซองต์", "คำใบ้": "หอไอเฟล เมืองแฟชั่น", "ประเทศ": "ประเทศฝรั่งเศส"},
+    {"อาหาร": "แป้งโรตี", "คำใบ้": "ผงมาซาล่ารสเผ็ด", "ประเทศ": "ประเทศอินเดีย"},
+    {"อาหาร": "ติ่มซำ", "คำใบ้": "แดนพญามังกร", "ประเทศ": "ประเทศจีน"},
+    {"อาหาร": "แหนมเนือง", "คำใบ้": "ที่ตั้งสุสานโฮจิมินห์", "ประเทศ": "ประเทศเวียดนาม"},
+    {"อาหาร": "พายเนื้อ", "คำใบ้": "แดนโคอาลา และ โอเปร่าเฮาส์", "ประเทศ": "ประเทศออสเตรเลีย"}
 ]
 
-# -------------------------
-# เริ่มต้นค่า
-# -------------------------
-if "started" not in st.session_state:
-    st.session_state.started = False
-
-if "questions" not in st.session_state:
-    st.session_state.questions = questions.copy()
-    random.shuffle(st.session_state.questions)
-
-if "number" not in st.session_state:
-    st.session_state.number = 0
+# เริ่มเกม
+if "question" not in st.session_state:
+    st.session_state.question = random.choice(data)
 
 if "score" not in st.session_state:
     st.session_state.score = 0
 
-if "finished" not in st.session_state:
-    st.session_state.finished = False
+if "answered" not in st.session_state:
+    st.session_state.answered = False
 
+question = st.session_state.question
 
-# -------------------------
-# หน้าหลัก
-# -------------------------
-if not st.session_state.started:
+st.subheader("🍴 คำถาม")
+st.write("อาหารนี้มาจากประเทศอะไร?")
+st.markdown(f"### {question['อาหาร']}")
 
-    st.title("🌎 Challenge Quiz Game")
-    st.header("🍜 เกมทายอาหารประจำชาติ")
+st.info(f"💡 คำใบ้: {question['คำใบ้']}")
 
-    st.write("ทดสอบความรู้เกี่ยวกับอาหารประจำชาติจากทั่วโลก")
+countries = [item["ประเทศ"] for item in data]
 
-    st.divider()
+answer = st.selectbox(
+    "เลือกคำตอบ",
+    ["-- เลือกประเทศ --"] + countries
+)
 
-    st.info("🎮 เกมมีทั้งหมด 10 ข้อ")
-
-    if st.button("▶️ เริ่มเกม", use_container_width=True):
-        st.session_state.started = True
-        st.rerun()
-
-
-# -------------------------
-# หน้าเกม
-# -------------------------
-elif not st.session_state.finished:
-
-    number = st.session_state.number
-    q = st.session_state.questions[number]
-
-    st.subheader(
-        f"ข้อที่ {number + 1} / {len(st.session_state.questions)}"
-    )
-
-    st.write("### 🍽️ คำถาม")
-    st.write(f"อาหาร **{q['food']}** เป็นอาหารประจำชาติของประเทศใด?")
-
-    answer = st.radio(
-        "เลือกคำตอบ",
-        q["options"],
-        key=f"answer_{number}"
-    )
-
-    if st.button("✅ ตอบ", use_container_width=True):
-
-        if answer == q["country"]:
-            st.success("🎉 ถูกต้อง!")
-            st.session_state.score += 1
-        else:
-            st.error(f"❌ ผิด! คำตอบคือ {q['country']}")
-
-        if number + 1 < len(st.session_state.questions):
-            st.session_state.number += 1
-            st.rerun()
-        else:
-            st.session_state.finished = True
-            st.rerun()
-
-
-# -------------------------
-# หน้าผลคะแนน
-# -------------------------
-else:
-
-    st.title("🏆 จบเกมแล้ว!")
-
-    score = st.session_state.score
-
-    st.metric(
-        "คะแนนของคุณ",
-        f"{score} / 10"
-    )
-
-    if score >= 8:
-        st.success("🌟 ดีมาก!")
-    elif score >= 5:
-        st.info("👍 ดี!")
-    elif score >= 1:
-        st.warning("📚 ควรปรับปรุง")
+if st.button("ตรวจคำตอบ"):
+    if answer == "-- เลือกประเทศ --":
+        st.warning("กรุณาเลือกคำตอบก่อน")
+    elif answer == question["ประเทศ"]:
+        st.success("🎉 ถูกต้อง!")
+        st.session_state.score += 1
+        st.session_state.answered = True
     else:
-        st.error("🔄 ลองใหม่อีกครั้ง")
+        st.error(f"❌ ผิด! คำตอบคือ {question['ประเทศ']}")
+        st.session_state.answered = True
 
-    st.divider()
+st.write(f"### 🏆 คะแนน: {st.session_state.score}")
 
-    if st.button("🔄 เล่นอีกครั้ง", use_container_width=True):
-        st.session_state.started = False
-        st.session_state.number = 0
-        st.session_state.score = 0
-        st.session_state.finished = False
-        random.shuffle(st.session_state.questions)
-        st.rerun()
+if st.button("➡️ ข้อถัดไป"):
+    st.session_state.question = random.choice(data)
+    st.session_state.answered = False
+    st.rerun()
+
+if st.button("🔄 เริ่มเกมใหม่"):
+    st.session_state.score = 0
+    st.session_state.question = random.choice(data)
+    st.session_state.answered = False
+    st.rerun()
